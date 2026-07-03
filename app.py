@@ -7,19 +7,18 @@ import plotly.graph_objects as go
 # --- Load Excel for historical data ---
 @st.cache_data
 def load_data():
-    # header=3 le dice a Pandas que tus verdaderos títulos están en la fila 4 de Excel
+    # header=3 lee la fila 4 de Excel como los encabezados de columna
     df = pd.read_excel("DatosResultadosEstrategiasLTTotalAPP.xlsx", engine='openpyxl', header=3)
     
-    # Limpiar espacios en blanco invisibles en los nombres de las columnas
-    df.columns = df.columns.str.strip()
+    # 1. Asegurar que todos los nombres de columnas sean texto string y limpiar espacios
+    df.columns = df.columns.astype(str).str.strip()
     
-    # Eliminar cualquier columna residual completamente vacía o sin nombre antes de procesar
-    df = df.loc[:, ~df.columns.astype(str).str.contains('^Unnamed')]
+    # 2. Eliminar cualquier columna residual sin nombre o vacía
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed|^Unnamed:')]
     
-    # Buscar dinámicamente si la columna se llama Date o Fecha
+    # 3. Buscar dinámicamente la columna de fecha
     posibles_nombres_fecha = ['Date', 'Fecha', 'date', 'fecha']
     columna_fecha = None
-    
     for col in posibles_nombres_fecha:
         if col in df.columns:
             columna_fecha = col
@@ -28,20 +27,34 @@ def load_data():
     if columna_fecha is None:
         columna_fecha = df.columns[0]
     
-    # Procesar la columna de tiempo de forma segura
+    # 4. Procesar la columna de tiempo y eliminar filas vacías al final del archivo
     df['time'] = pd.to_datetime(df[columna_fecha], errors='coerce')
-    
-    # Tirar a la basura filas que queden completamente vacías al final del excel
     df = df.dropna(subset=['time'])
-    
     df['year'] = df['time'].dt.year
     
-    # Identificar de manera dinámica las columnas de Benchmarks vs Estrategias
+    # 5. Filtrar estrictamente: las estrategias solo pueden ser columnas cuyos nombres NO sean números
     benchmarks = ['BuyHold SPY', 'BuyHold 60/40']
-    all_numeric_cols = [col for col in df.columns if col not in [columna_fecha, 'time', 'year']]
-    strategies = [col for col in all_numeric_cols if col not in benchmarks]
     
-    # Limpieza masiva y conversión forzada a numérico
+    all_numeric_cols = []
+    strategies = []
+    
+    for col in df.columns:
+        # Ignorar columnas de control de fecha/tiempo
+        if col in [columna_fecha, 'time', 'year']:
+            continue
+            
+        # Validar si el nombre de la columna parece un número o porcentaje huérfano (ej: "0", "0.2")
+        try:
+            float(col.replace('%', ''))
+            # Si se puede convertir a número, es una columna inválida/basura del Excel; la ignoramos
+            continue
+        except ValueError:
+            # Si da error, es un nombre de texto real (una estrategia o un benchmark)
+            all_numeric_cols.append(col)
+            if col not in benchmarks:
+                strategies.append(col)
+    
+    # 6. Limpieza y conversión forzada a numérico de los datos históricos
     for col in all_numeric_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce').ffill().fillna(100000)
         
