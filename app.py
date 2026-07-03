@@ -4,22 +4,42 @@ import numpy as np
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
-# --- Load CSV for historical data ---
+# --- Load Excel for historical data ---
 @st.cache_data
 def load_data():
-    df = pd.read_csv("DatosResultadosEstrategiasLTTotalAPP.csv")
-    df['time'] = pd.to_datetime(df['Date'])
+    # Lee el archivo de Excel usando el motor openpyxl
+    df = pd.read_excel("DatosResultadosEstrategiasLTTotalAPP.xlsx", engine='openpyxl')
+    
+    # Limpiar espacios en blanco invisibles en los nombres de las columnas
+    df.columns = df.columns.str.strip()
+    
+    # Buscar dinámicamente si la columna se llama Date o Fecha
+    posibles_nombres_fecha = ['Date', 'Fecha', 'date', 'fecha']
+    columna_fecha = None
+    
+    for col in posibles_nombres_fecha:
+        if col in df.columns:
+            columna_fecha = col
+            break
+            
+    if columna_fecha is None:
+        columna_fecha = df.columns[0]
+    
+    # Procesar la columna de tiempo
+    df['time'] = pd.to_datetime(df[columna_fecha])
     df['year'] = df['time'].dt.year
     
+    # Identificar de manera dinámica las columnas de Benchmarks vs Estrategias
     benchmarks = ['BuyHold SPY', 'BuyHold 60/40']
-    all_numeric_cols = [col for col in df.columns if col not in ['Date', 'time', 'year']]
+    all_numeric_cols = [col for col in df.columns if col not in ['Date', 'Fecha', 'date', 'fecha', 'time', 'year']]
     strategies = [col for col in all_numeric_cols if col not in benchmarks]
     
+    # Limpieza masiva y conversión forzada a numérico
     for col in all_numeric_cols:
         df[col] = pd.to_numeric(df[col], errors='coerce').ffill().fillna(100000)
         
     return df, strategies
-
+    
 # --- Load Summary Table ---
 @st.cache_data
 def load_summary_table():
