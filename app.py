@@ -43,13 +43,16 @@ def load_data():
 # --- Load Summary Table ---
 @st.cache_data
 def load_summary_table():
-    # Al usar solo el nombre del archivo, funcionará de manera local y en GitHub de forma portátil
-    path = "SummaryTable.csv" 
+    path = "SummaryTable.csv"  # O "SummaryTable.xlsx" según cómo lo hayas dejado
     try:
         summary_df = pd.read_csv(path)
+        
+        # Elimina automáticamente cualquier columna vacía residual (como Unnamed: 15)
+        summary_df = summary_df.loc[:, ~summary_df.columns.str.contains('^Unnamed')]
+        
         return summary_df
     except Exception as e:
-        st.error(f"No se pudo cargar SummaryTable.csv: {e}")
+        st.error(f"No se pudo cargar la tabla de resumen: {e}")
         return None
 
 historical_df, strategies = load_data()
