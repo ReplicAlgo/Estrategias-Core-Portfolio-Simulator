@@ -7,11 +7,14 @@ import plotly.graph_objects as go
 # --- Load Excel for historical data ---
 @st.cache_data
 def load_data():
-    # Lee el archivo de Excel usando el motor openpyxl
-    df = pd.read_excel("DatosResultadosEstrategiasLTTotalAPP.xlsx", engine='openpyxl')
+    # header=3 le dice a Pandas que tus verdaderos títulos están en la fila 4 de Excel
+    df = pd.read_excel("DatosResultadosEstrategiasLTTotalAPP.xlsx", engine='openpyxl', header=3)
     
     # Limpiar espacios en blanco invisibles en los nombres de las columnas
     df.columns = df.columns.str.strip()
+    
+    # Eliminar cualquier columna residual completamente vacía o sin nombre antes de procesar
+    df = df.loc[:, ~df.columns.astype(str).str.contains('^Unnamed')]
     
     # Buscar dinámicamente si la columna se llama Date o Fecha
     posibles_nombres_fecha = ['Date', 'Fecha', 'date', 'fecha']
@@ -25,13 +28,17 @@ def load_data():
     if columna_fecha is None:
         columna_fecha = df.columns[0]
     
-    # Procesar la columna de tiempo
-    df['time'] = pd.to_datetime(df[columna_fecha])
+    # Procesar la columna de tiempo de forma segura
+    df['time'] = pd.to_datetime(df[columna_fecha], errors='coerce')
+    
+    # Tirar a la basura filas que queden completamente vacías al final del excel
+    df = df.dropna(subset=['time'])
+    
     df['year'] = df['time'].dt.year
     
     # Identificar de manera dinámica las columnas de Benchmarks vs Estrategias
     benchmarks = ['BuyHold SPY', 'BuyHold 60/40']
-    all_numeric_cols = [col for col in df.columns if col not in ['Date', 'Fecha', 'date', 'fecha', 'time', 'year']]
+    all_numeric_cols = [col for col in df.columns if col not in [columna_fecha, 'time', 'year']]
     strategies = [col for col in all_numeric_cols if col not in benchmarks]
     
     # Limpieza masiva y conversión forzada a numérico
