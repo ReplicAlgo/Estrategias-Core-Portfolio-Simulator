@@ -211,7 +211,7 @@ for year, group in historical_df.groupby('year'):
     p_end = group['portfolio_val'].iloc[-1]
     p_return = ((p_end / p_start) - 1) * 100
     
-    row_dict = {"Year": int(year), "Return": p_return}
+    row_dict = {"Year": int(year), "Portafolio": p_return}
     
     if "BuyHold SPY" in historical_df.columns:
         spy_start = group["BuyHold SPY"].iloc[0]
