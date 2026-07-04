@@ -332,3 +332,57 @@ if not yearly_df.empty:
     )
 else:
     st.write("No data available.")
+
+# --- Footer & Disclaimer (Basado en image_a0d562.png) ---
+st.markdown("<br><br>", unsafe_allow_html=True)
+
+# Contenedor del Aviso de Riesgo
+st.markdown(
+    """
+    <div style="
+        background-color: #111425; 
+        border: 1px solid #ffcc00; 
+        border-radius: 20px; 
+        padding: 30px; 
+        text-align: center; 
+        margin-bottom: 30px;
+    ">
+        <h4 style="
+            color: #ffcc00; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 15px; 
+            font-size: 16px; 
+            font-weight: bold;
+        ">
+            Aviso de Riesgo
+        </h4>
+        <p style="
+            color: #ffffff; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            margin: 0 auto; 
+            max-width: 900px;
+        ">
+            Toda la información presente en esta web debe considerarse como una opinión y en ningún caso como un asesoramiento 
+            financiero o de inversión. Las rentabilidades pasadas no garantizan resultados futuros. Tú eres el único responsable de tus 
+            decisiones financieras. Consulta a tu asesor tributario y financiero antes de invertir.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Pie de página (Copyright y Créditos)
+st.markdown(
+    """
+    <div style="text-align: center; color: #666e8d; font-size: 14px; margin-top: 20px;">
+        <p>© 2026 ReplicAlgo &nbsp;&bull;&nbsp; 🤖 Actualizado por Master Bot</p>
+        <p style="font-size: 20px; margin-top: 10px;">
+            <a href="https://github.com" target="_blank" style="color: #666e8d; text-decoration: none; margin: 0 10px;">🔗</a>
+            <a href="https://twitter.com" target="_blank" style="color: #666e8d; text-decoration: none; margin: 0 10px;">🐦</a>
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
