@@ -379,8 +379,7 @@ st.markdown(
     <div style="text-align: center; color: #666e8d; font-size: 14px; margin-top: 20px;">
         <p>© 2026 ReplicAlgo &nbsp;&bull;&nbsp; 🤖 Actualizado por Master Bot</p>
         <p style="font-size: 20px; margin-top: 10px;">
-            <a href="https://github.com" target="_blank" style="color: #666e8d; text-decoration: none; margin: 0 10px;">🔗</a>
-            <a href="https://twitter.com" target="_blank" style="color: #666e8d; text-decoration: none; margin: 0 10px;">🐦</a>
+           
         </p>
     </div>
     """,
