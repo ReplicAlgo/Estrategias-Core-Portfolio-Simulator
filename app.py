@@ -143,25 +143,13 @@ show_benchmarks = st.sidebar.checkbox("Show Benchmarks (SPY & 60/40)", value=Tru
 
 st.sidebar.subheader("Strategy Allocations (%)")
 
+# 3) Lista fija con el allocation por defecto requerido en orden exacto para tus 11 estrategias
+default_allocations = [0, 0, 20, 0, 0, 20, 0, 30, 20, 0, 20]
 allocations = {}
-for strat in strategies:
-    strat_lower = strat.lower()
-    
-    # Defaults inteligentes adaptados a las asignaciones requeridas
-    if "perezoso" in strat_lower:
-        default_val = 10
-    elif "seis" in strat_lower or "f6" in strat_lower or "fuerza 6" in strat_lower:
-        default_val = 20
-    elif "defensivo" in strat_lower or "defensiva" in strat_lower or "d4" in strat_lower:
-        default_val = 20
-    elif "weather" in strat_lower or "taa" in strat_lower or "flex" in strat_lower:
-        default_val = 20
-    elif "core" in strat_lower or "ndx" in strat_lower:
-        default_val = 30
-    elif "synergy" in strat_lower or "satellite" in strat_lower:
-        default_val = 10
-    else:
-        default_val = 0
+
+for idx, strat in enumerate(strategies):
+    # Si el número de estrategias en el Excel coincide o cambia, evitamos que rompa usando una alternativa segura (0)
+    default_val = default_allocations[idx] if idx < len(default_allocations) else 0
             
     allocations[strat] = st.sidebar.slider(f"{strat}", 0, 200, default_val, step=5,
                                            help="0 = off, 100 = full size, >100 = leverage")
@@ -327,9 +315,20 @@ if not yearly_df.empty:
     def color_returns(val):
         return 'color: red' if val < 0 else 'color: green'
     
-    styled_yearly_df = yearly_df.style.map(color_returns, subset=style_target_cols)\
-                                      .format(format_dict)
+    # 2) Invertimos el dataframe (con .iloc[::-1]) para que empiece mostrando el año más nuevo (2026) arriba de todo.
+    inverted_yearly_df = yearly_df.iloc[::-1]
     
-    st.dataframe(styled_yearly_df, hide_index=True, use_container_width=True)
+    styled_yearly_df = inverted_yearly_df.style.map(color_returns, subset=style_target_cols)\
+                                              .format(format_dict)
+    
+    # 1) Añadimos column_config para renombrar "Return" a "Portafolio" visualmente en la tabla.
+    st.dataframe(
+        styled_yearly_df, 
+        hide_index=True, 
+        use_container_width=True,
+        column_config={
+            "Return": st.column_config.TextColumn("Portafolio")
+        }
+    )
 else:
     st.write("No data available.")
