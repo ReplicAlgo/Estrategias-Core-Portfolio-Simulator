@@ -379,8 +379,8 @@ st.markdown(
     <div style="text-align: center; color: #666e8d; font-size: 14px; margin-top: 20px;">
         <p>© 2026 ReplicAlgo &nbsp;&bull;&nbsp; 🤖 Actualizado por Master Bot</p>
         <p style="font-size: 20px; margin-top: 10px;">
-           
-        </p>
+        
+        
     </div>
     """,
     unsafe_allow_html=True
