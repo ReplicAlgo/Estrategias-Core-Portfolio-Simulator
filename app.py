@@ -7,8 +7,14 @@ import plotly.graph_objects as go
 # --- Load Excel for historical data ---
 @st.cache_data
 def load_data():
-    # header=3 lee la fila 4 de Excel como los encabezados de columna
-    df = pd.read_excel("DatosResultadosEstrategiasLTTotalAPP.xlsx", engine='openpyxl', header=3)
+    # header=3 lee la fila 4 de Excel como encabezados
+    # usecols="B:O" limita la lectura estrictamente a las columnas relevantes según image_9f96c3.png
+    df = pd.read_excel(
+        "DatosResultadosEstrategiasLTTotalAPP.xlsx", 
+        engine='openpyxl', 
+        header=3,
+        usecols="B:O"
+    )
     
     # 1. Asegurar que todos los nombres de columnas sean texto string y limpiar espacios
     df.columns = df.columns.astype(str).str.strip()
@@ -32,7 +38,7 @@ def load_data():
     df = df.dropna(subset=['time'])
     df['year'] = df['time'].dt.year
     
-    # 5. Filtrar estrictamente: las estrategias solo pueden ser columnas cuyos nombres NO sean números
+    # 5. Filtrar estrictamente: Benchmarks vs Estrategias reales
     benchmarks = ['BuyHold SPY', 'BuyHold 60/40']
     
     all_numeric_cols = []
@@ -43,13 +49,11 @@ def load_data():
         if col in [columna_fecha, 'time', 'year']:
             continue
             
-        # Validar si el nombre de la columna parece un número o porcentaje huérfano (ej: "0", "0.2")
+        # Validar si el nombre de la columna parece un número o porcentaje huérfano
         try:
             float(col.replace('%', ''))
-            # Si se puede convertir a número, es una columna inválida/basura del Excel; la ignoramos
             continue
         except ValueError:
-            # Si da error, es un nombre de texto real (una estrategia o un benchmark)
             all_numeric_cols.append(col)
             if col not in benchmarks:
                 strategies.append(col)
@@ -63,13 +67,10 @@ def load_data():
 # --- Load Summary Table ---
 @st.cache_data
 def load_summary_table():
-    path = "SummaryTable.csv"  # O "SummaryTable.xlsx" según cómo lo hayas dejado
+    path = "SummaryTable.csv"
     try:
         summary_df = pd.read_csv(path)
-        
-        # Elimina automáticamente cualquier columna vacía residual (como Unnamed: 15)
         summary_df = summary_df.loc[:, ~summary_df.columns.str.contains('^Unnamed')]
-        
         return summary_df
     except Exception as e:
         st.error(f"No se pudo cargar la tabla de resumen: {e}")
@@ -83,7 +84,6 @@ st.markdown("<h2 style='text-align: center; margin-bottom: 5px;'>Resultados Hist
 st.markdown("<p style='text-align: center; color: #666; margin-bottom: 20px;'>Utiliza estas métricas de rendimiento histórico (2007 - 2026) para guiar tu asignación en el menú lateral.</p>", unsafe_allow_html=True)
 
 if summary_df is not None:
-    # Configuración interactiva y visual de las columnas basada en image_4a7e40.png
     st.dataframe(
         summary_df,
         hide_index=True,
@@ -91,7 +91,7 @@ if summary_df is not None:
         column_config={
             "Estrategia": st.column_config.TextColumn("Estrategia", help="Nombre del sistema cuantitativo"),
             "Fecha": st.column_config.TextColumn("Periodo", help="Rango de fechas evaluado"),
-            "Ganancia": st.column_config.TextColumn("Ganancia Total"), # Tratado como texto o formateado si viene numérico
+            "Ganancia": st.column_config.TextColumn("Ganancia Total"), 
             "CAGR": st.column_config.TextColumn("CAGR", help="Tasa de Crecimiento Anual Compuesto"),
             "Max Caída": st.column_config.TextColumn("Max Caída", help="Peor Drawdown histórico de la estrategia"),
             "Volatilidad": st.column_config.TextColumn("Volatilidad"),
@@ -147,10 +147,10 @@ allocations = {}
 for strat in strategies:
     strat_lower = strat.lower()
     
-    # Defaults inteligentes adaptados a los nombres de la SummaryTable de image_4a7e40.png
+    # Defaults inteligentes adaptados a las asignaciones requeridas
     if "perezoso" in strat_lower:
         default_val = 10
-    elif "seis" in strat_lower or "f6" in strat_lower:
+    elif "seis" in strat_lower or "f6" in strat_lower or "fuerza 6" in strat_lower:
         default_val = 20
     elif "defensivo" in strat_lower or "defensiva" in strat_lower or "d4" in strat_lower:
         default_val = 20
@@ -163,7 +163,6 @@ for strat in strategies:
     else:
         default_val = 0
             
-    # Mostrar el slider de asignación respetando los nombres limpios del CSV principal
     allocations[strat] = st.sidebar.slider(f"{strat}", 0, 200, default_val, step=5,
                                            help="0 = off, 100 = full size, >100 = leverage")
 
