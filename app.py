@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 @st.cache_data
 def load_data():
     # header=3 lee la fila 4 de Excel como encabezados
-    # usecols="B:S" limita la lectura estrictamente a las columnas relevantes
+    # usecols="B:S" ajustado para leer hasta columna S
     df = pd.read_excel(
         "DatosResultadosEstrategiasLTTotalAPP.xlsx", 
         engine='openpyxl', 
@@ -71,6 +71,8 @@ def load_summary_table():
     try:
         summary_df = pd.read_csv(path)
         summary_df = summary_df.loc[:, ~summary_df.columns.str.contains('^Unnamed')]
+        # Filtramos filas vacías para evitar que aparezcan en la app
+        summary_df = summary_df.dropna(subset=[summary_df.columns[0]])
         return summary_df
     except Exception as e:
         st.error(f"No se pudo cargar la tabla de resumen: {e}")
@@ -379,9 +381,6 @@ st.markdown(
     """
     <div style="text-align: center; color: #666e8d; font-size: 14px; margin-top: 20px;">
         <p>© 2026 ReplicAlgo &nbsp;&bull;&nbsp; 🤖 Actualizado por Master Bot</p>
-        <p style="font-size: 20px; margin-top: 10px;">
-        
-        
     </div>
     """,
     unsafe_allow_html=True
