@@ -64,18 +64,19 @@ def load_data():
         
     return df, strategies
     
-# --- Load Summary Table ---
+# --- Load Summary Table (Código corregido) ---
 @st.cache_data
 def load_summary_table():
     path = "SummaryTable.csv"
     try:
-        # skiprows=1 skips the empty row at the top of your Excel/CSV export
-        summary_df = pd.read_csv(path, skiprows=1)
+        # Se elimina skiprows=1 para que lea la primera fila como encabezado
+        summary_df = pd.read_csv(path)
         
-        # Drop columns that are completely empty or named "Unnamed"
+        # Limpiar nombres de columnas y eliminar vacías
+        summary_df.columns = summary_df.columns.str.strip()
         summary_df = summary_df.loc[:, ~summary_df.columns.str.contains('^Unnamed')]
         
-        # Drop rows where the "Estrategia" column is empty
+        # Eliminar filas donde "Estrategia" esté vacía
         summary_df = summary_df.dropna(subset=['Estrategia'])
         
         return summary_df
