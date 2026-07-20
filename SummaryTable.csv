@@ -1,12 +1,12 @@
-﻿Estrategia	Fecha	Ganancia	CAGR	Max Caída	Volatilidad	# Trades	% Ganador	Gan. Promedio	Perdida Prom	Duración Ganador	Duración Perdedor	Profit Factor	 Sharpe 	Perfil Riesgo	Posiciones Simultaneas	Min Inversión (USD)
-Smart_DCA_Acciones	1/3/07 - 6/30/26	$1,157,961 	13.9%	-61.0%	24.8%	 21 	71%	67.3%	9.1%	 593 	 150 	 13.6 	 0.7 	Arriesgado	 2 	 1,500 
-Smart_DCA_Defensivo	1/3/07 - 6/30/26	$220,521 	6.2%	-19.2%	9.8%	 221 	53%	4.3%	2.5%	 55 	 32 	 1.9 	 0.7 	Moderado	 2 	 500 
-Smart_Global 60/40	1/3/07 - 6/30/26	$759,941 	11.7%	-36.9%	15.3%	 242 	55%	11.4%	2.9%	 116 	 39 	 5.1 	 0.8 	Arriesgado	 4 	 2,500 
-AllWeather TAA	1/3/07 - 6/30/26	$588,775 	10.5%	-14.0%	12.4%	 79 	65%	14.8%	3.9%	 157 	 68 	 7.6 	 0.9 	Moderado	 3 	 1,700 
-AllWeather_FLEX	1/3/07 - 6/30/26	$582,006 	10.4%	-19.9%	14.0%	 252 	57%	19.4%	4.7%	 110 	 49 	 3.2 	 0.8 	Arriesgado	 5 	 2,800 
-AllWeather_Leverage	1/3/07 - 6/30/26	$1,425,626 	15.1%	-24.5%	20.1%	 229 	51%	30.7%	7.0%	 133 	 43 	 3.3 	 0.8 	Arriesgado	 5 	 2,800 
-OsoPerezoso	1/3/07 - 6/30/26	$373,851 	8.3%	-19.2%	10.8%	 39 	54%	41.3%	5.9%	 514 	 60 	 9.4 	 0.8 	Arriesgado	 4 	 2,500 
-Fuerza_SEIS_F6	1/3/07 - 6/30/26	$1,047,134 	13.4%	-17.1%	13.2%	 37 	65%	27.3%	5.6%	 324 	 87 	 10.5 	 1.0 	Arriesgado	 4 	 1,200 
-RotacionDefensiva-D4	1/3/07 - 6/30/26	$167,477 	5.3%	-24.1%	12.5%	 70 	50%	5.2%	2.0%	 60 	 20 	 2.2 	 0.5 	Arriesgado	 1 	 100 
-Satellite Synergy	1/3/07 - 6/30/26	$377,429 	8.4%	-10.9%	7.6%	 322 	66%	6.9%	3.1%	 82 	 34 	 3.7 	 1.1 	Moderado	 7 	 5,600 
-NDX_Core9	1/3/07 - 6/30/26	$2,502,460 	18.3%	-40.1%	20.5%	 156 	48%	65.2%	10.0%	 306 	 71 	 6.7 	 0.9 	Arriesgado	 9 	 7000-17000 
+﻿Estrategia,Fecha,Ganancia,CAGR,Max Caída,Volatilidad,# Trades,% Ganador,Gan. Promedio,Perdida Prom,Duración Ganador,Duración Perdedor,Profit Factor, Sharpe ,Perfil Riesgo,Posiciones Simultaneas,Min Inversión (USD),Min inversión Alternativas ETF menor Precio,Alternativas
+Smart_DCA_Acciones,1/3/07 - 6/30/26,"$1,157,961 ",13.9%,-61.0%,24.8%, 21 ,71%,67.3%,9.1%, 593 , 150 , 13.6 , 0.7 ,Arriesgado, 2 ," 1,500 "," 1,000 ","VOO, QQQM,VWO,VEA"
+Smart_DCA_Defensivo,1/3/07 - 6/30/26,"$220,521 ",6.2%,-19.2%,9.8%, 221 ,53%,4.3%,2.5%, 55 , 32 , 1.9 , 0.7 ,Moderado, 2 , 500 , 130 ,"GLDM,SJNK, GOVT, UUP, VTIP"
+Smart_Global 60/40,1/3/07 - 6/30/26,"$759,941 ",11.7%,-36.9%,15.3%, 242 ,55%,11.4%,2.9%, 116 , 39 , 5.1 , 0.8 ,Arriesgado, 4 ," 2,500 "," 1,700 ","VOO, QQQM,VWO,VEA,GLDM,SJNK, GOVT, UUP, VTIP"
+AllWeather TAA,1/3/07 - 6/30/26,"$588,775 ",10.5%,-14.0%,12.4%, 79 ,65%,14.8%,3.9%, 157 , 68 , 7.6 , 0.9 ,Moderado, 3 ," 1,700 "," 1,500 ","VOO,QQQM,VEA,VWO,GLDM,IXC,VGIT,VTIP,UUP,BITO"
+AllWeather_FLEX,1/3/07 - 6/30/26,"$582,006 ",10.4%,-19.9%,14.0%, 252 ,57%,19.4%,4.7%, 110 , 49 , 3.2 , 0.8 ,Arriesgado, 5 ," 2,800 "," 2,000 ","VOO, QQQM, VEA, VWO, GLDM, DBB, PDBC, IXC, SJNK, VGLT, UUP, VGSH, SGOV, USDU, SCHG, VTIP, BITO, VGIT"
+AllWeather_Leverage,1/3/07 - 6/30/26,"$1,425,626 ",15.1%,-24.5%,20.1%, 229 ,51%,30.7%,7.0%, 133 , 43 , 3.3 , 0.8 ,Arriesgado, 5 ," 2,800 "," 2,000 ","VOO, QQQM, VEA, VWO, GLDM, DBB, PDBC, IXC, SJNK, TMF, EUO, VGSH, SGOV, SSO, QLD, EET, EFO, UGL, VTIP, UTLU, BITO"
+OsoPerezoso,1/3/07 - 6/30/26,"$373,851 ",8.3%,-19.2%,10.8%, 39 ,54%,41.3%,5.9%, 514 , 60 , 9.4 , 0.8 ,Arriesgado, 4 ," 2,500 "," 1,900 ","VOO, QQQM,VWO,VEA"
+Fuerza_SEIS_F6,1/3/07 - 6/30/26,"$1,047,134 ",13.4%,-17.1%,13.2%, 37 ,65%,27.3%,5.6%, 324 , 87 , 10.5 , 1.0 ,Arriesgado, 4 ," 1,200 ", 500 ,"ITOT,IXUS,PDBC,GLDM"
+RotacionDefensiva-D4,1/3/07 - 6/30/26,"$167,477 ",5.3%,-24.1%,12.5%, 70 ,50%,5.2%,2.0%, 60 , 20 , 2.2 , 0.5 ,Arriesgado, 1 , 100 , 70 ,"VGLT,EUO,SHY,SJNK"
+Satellite Synergy,1/3/07 - 6/30/26,"$377,429 ",8.4%,-10.9%,7.6%, 322 ,66%,6.9%,3.1%, 82 , 34 , 3.7 , 1.1 ,Moderado, 7 ," 5,600 "," 2,000 ","VOO, VEA, VWO, SPSB, QQQM, VGIT, VGSH, FLRN, SJNK, VGLT, UUP, SGOV, VTIP, SCHZ, GLDM, UCO, PDBC, DBA, IXC, UTLU"
+NDX_Core9,1/3/07 - 6/30/26,"$2,502,460 ",18.3%,-40.1%,20.5%, 156 ,48%,65.2%,10.0%, 306 , 71 , 6.7 , 0.9 ,Arriesgado, 9 , 7000-17000 , NA ,Fracciones única alternativa para menos capital
