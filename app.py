@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 @st.cache_data
 def load_data():
     # header=3 lee la fila 4 de Excel como encabezados
-    # usecols="B:Q" limita la lectura estrictamente a las columnas relevantes (MODIFICADO A Q)
+    # SE HA MODIFICADO usecols="B:Q" PARA INCLUIR HASTA LA COLUMNA Q
     df = pd.read_excel(
        "DatosResultadosEstrategiasLTTotalAPP.xlsx", 
        engine='openpyxl', 
@@ -254,8 +254,8 @@ fig = make_subplots(
     row_heights=[0.65, 0.35]
 )
  
-fig.add_trace(go.Scatter(x=dates, y=final_portfolio_equity, mode="lines", name="My Portfolio", line=dict(color="green", width=2.5)), row=1, col=1)
-fig.add_trace(go.Scatter(x=dates, y=drawdown_pct, fill="tozeroy", name="Portfolio Drawdown", line=dict(color="red"), fillcolor="rgba(255,0,0,0.15)"), row=2, col=1)
+fig.add_trace(go.Scatter(x=dates, y=final_portfolio_equity, mode="lines", name="My Portfolio", line=dict(color="#00CC96", width=2.5)), row=1, col=1)
+fig.add_trace(go.Scatter(x=dates, y=drawdown_pct, fill="tozeroy", name="Portfolio Drawdown", line=dict(color="#EF553B"), fillcolor="rgba(239, 85, 59, 0.15)"), row=2, col=1)
  
 if show_benchmarks:
     if "BuyHold SPY" in historical_df.columns:
@@ -263,16 +263,16 @@ if show_benchmarks:
         spy_cummax = np.maximum.accumulate(spy_equity)
         spy_dd_pct = ((spy_equity - spy_cummax) / spy_cummax) * 100
         
-        fig.add_trace(go.Scatter(x=dates, y=spy_equity, mode="lines", name="BuyHold SPY", line=dict(color="orange", dash="dash", width=1.5)), row=1, col=1)
-        fig.add_trace(go.Scatter(x=dates, y=spy_dd_pct, mode="lines", name="BuyHold SPY", line=dict(color="orange", dash="dash", width=1.5), showlegend=False), row=2, col=1)
+        fig.add_trace(go.Scatter(x=dates, y=spy_equity, mode="lines", name="BuyHold SPY", line=dict(color="#FFA15A", dash="dash", width=1.5)), row=1, col=1)
+        fig.add_trace(go.Scatter(x=dates, y=spy_dd_pct, mode="lines", name="BuyHold SPY", line=dict(color="#FFA15A", dash="dash", width=1.5), showlegend=False), row=2, col=1)
  
     if "BuyHold 60/40" in historical_df.columns:
         yf_equity = historical_df["BuyHold 60/40"].values
         yf_cummax = np.maximum.accumulate(yf_equity)
         yf_dd_pct = ((yf_equity - yf_cummax) / yf_cummax) * 100
         
-        fig.add_trace(go.Scatter(x=dates, y=yf_equity, mode="lines", name="BuyHold 60/40", line=dict(color="darkcyan", dash="dot", width=1.5)), row=1, col=1)
-        fig.add_trace(go.Scatter(x=dates, y=yf_dd_pct, mode="lines", name="BuyHold 60/40", line=dict(color="darkcyan", dash="dot", width=1.5), showlegend=False), row=2, col=1)
+        fig.add_trace(go.Scatter(x=dates, y=yf_equity, mode="lines", name="BuyHold 60/40", line=dict(color="#19D3F3", dash="dot", width=1.5)), row=1, col=1)
+        fig.add_trace(go.Scatter(x=dates, y=yf_dd_pct, mode="lines", name="BuyHold 60/40", line=dict(color="#19D3F3", dash="dot", width=1.5), showlegend=False), row=2, col=1)
  
 fig.update_layout(height=650, showlegend=True, hovermode="x unified", dragmode="zoom")
 fig.update_xaxes(
@@ -313,13 +313,11 @@ if not yearly_df.empty:
     def color_returns(val):
         return 'color: red' if val < 0 else 'color: green'
     
-    # 2) Invertimos el dataframe (con .iloc[::-1]) para que empiece mostrando el año más nuevo (2026) arriba de todo.
     inverted_yearly_df = yearly_df.iloc[::-1]
     
     styled_yearly_df = inverted_yearly_df.style.map(color_returns, subset=style_target_cols)\
                                              .format(format_dict)
     
-    # 1) Añadimos column_config para renombrar "Return" a "Portafolio" visualmente en la tabla.
     st.dataframe(
        styled_yearly_df, 
        hide_index=True, 
@@ -331,10 +329,9 @@ if not yearly_df.empty:
 else:
     st.write("No data available.")
  
-# --- Footer & Disclaimer (Basado en image_a0d562.png) ---
+# --- Footer & Disclaimer ---
 st.markdown("<br><br>", unsafe_allow_html=True)
  
-# Contenedor del Aviso de Riesgo
 st.markdown(
     """
     <div style="
@@ -371,14 +368,10 @@ st.markdown(
    unsafe_allow_html=True
 )
  
-# Pie de página (Copyright y Créditos)
 st.markdown(
     """
     <div style="text-align: center; color: #666e8d; font-size: 14px; margin-top: 20px;">
         <p>© 2026 ReplicAlgo &nbsp;&bull;&nbsp; 🤖 Actualizado por Master Bot</p>
-        <p style="font-size: 20px; margin-top: 10px;">
-        
-        
     </div>
     """,
    unsafe_allow_html=True
