@@ -107,7 +107,9 @@ if summary_df is not None:
                min_value=0.0,
                max_value=2.0
            ),
-           "Perfil Riesgo": st.column_config.TextColumn("Perfil Riesgo")
+           "Perfil Riesgo": st.column_config.TextColumn("Perfil Riesgo"),
+           "Posiciones Simultaneas": st.column_config.NumberColumn("# Trades", format="%d"),
+           "Min Inversión (USD)": st.column_config.TextColumn("Ganancia Total")
        }
     )
     st.markdown("<hr style='margin-top:30px; margin-bottom:30px; border: 0; border-top: 1px solid #eee;'>", unsafe_allow_html=True)
