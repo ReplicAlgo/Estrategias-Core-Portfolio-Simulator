@@ -8,12 +8,12 @@ import plotly.graph_objects as go
 @st.cache_data
 def load_data():
     # header=3 lee la fila 4 de Excel como encabezados
-    # usecols="B:O" limita la lectura estrictamente a las columnas relevantes según image_9f96c3.png
+    # usecols="B:S" limita la lectura estrictamente a las columnas relevantes
     df = pd.read_excel(
         "DatosResultadosEstrategiasLTTotalAPP.xlsx", 
         engine='openpyxl', 
         header=3,
-        usecols="B:O"
+        usecols="B:S"
     )
     
     # 1. Asegurar que todos los nombres de columnas sean texto string y limpiar espacios
@@ -88,6 +88,7 @@ if summary_df is not None:
         summary_df,
         hide_index=True,
         use_container_width=True,
+        height=500,
         column_config={
             "Estrategia": st.column_config.TextColumn("Estrategia", help="Nombre del sistema cuantitativo"),
             "Fecha": st.column_config.TextColumn("Periodo", help="Rango de fechas evaluado"),
@@ -319,7 +320,7 @@ if not yearly_df.empty:
     inverted_yearly_df = yearly_df.iloc[::-1]
     
     styled_yearly_df = inverted_yearly_df.style.map(color_returns, subset=style_target_cols)\
-                                              .format(format_dict)
+                                             .format(format_dict)
     
     # 1) Añadimos column_config para renombrar "Return" a "Portafolio" visualmente en la tabla.
     st.dataframe(
