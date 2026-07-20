@@ -69,12 +69,15 @@ def load_data():
 def load_summary_table():
     path = "SummaryTable.csv"
     try:
-        # 'on_bad_lines' skips lines that have too many fields
-        # 'engine="python"' is more flexible with inconsistent CSV formatting
-        summary_df = pd.read_csv(path, on_bad_lines='skip', engine='python')
+        # skiprows=1 skips the empty row at the top of your Excel/CSV export
+        summary_df = pd.read_csv(path, skiprows=1)
+        
+        # Drop columns that are completely empty or named "Unnamed"
         summary_df = summary_df.loc[:, ~summary_df.columns.str.contains('^Unnamed')]
-        # Filtramos filas vacías para evitar que aparezcan en la app
-        summary_df = summary_df.dropna(subset=[summary_df.columns[0]])
+        
+        # Drop rows where the "Estrategia" column is empty
+        summary_df = summary_df.dropna(subset=['Estrategia'])
+        
         return summary_df
     except Exception as e:
         st.error(f"No se pudo cargar la tabla de resumen: {e}")
@@ -94,25 +97,23 @@ if summary_df is not None:
         use_container_width=True,
         height=500,
         column_config={
-            "Estrategia": st.column_config.TextColumn("Estrategia", help="Nombre del sistema cuantitativo"),
-            "Fecha": st.column_config.TextColumn("Periodo", help="Rango de fechas evaluado"),
-            "Ganancia": st.column_config.TextColumn("Ganancia Total"), 
-            "CAGR": st.column_config.TextColumn("CAGR", help="Tasa de Crecimiento Anual Compuesto"),
-            "Max Caída": st.column_config.TextColumn("Max Caída", help="Peor Drawdown histórico de la estrategia"),
+            "Estrategia": st.column_config.TextColumn("Estrategia"),
+            "Fecha": st.column_config.TextColumn("Periodo"),
+            "Ganancia": st.column_config.TextColumn("Ganancia"),
+            "CAGR": st.column_config.TextColumn("CAGR"),
+            "Max Caída": st.column_config.TextColumn("Max Caída"),
             "Volatilidad": st.column_config.TextColumn("Volatilidad"),
-            "# Trades": st.column_config.NumberColumn("# Trades", format="%d"),
-            "% Ganadoras": st.column_config.TextColumn("% Ganado"),
+            "# Trades": st.column_config.NumberColumn("# Trades"),
+            "% Ganador": st.column_config.TextColumn("% Ganador"),
             "Gan. Promedio": st.column_config.TextColumn("Gan. Prom"),
-            "Perdida Promedio": st.column_config.TextColumn("Perdida Pr"),
-            "Profit Fact": st.column_config.NumberColumn("Profit Fact", format="%.1f"),
-            "Sharpe": st.column_config.ProgressColumn(
-                "Sharpe Ratio",
-                help="Relación Retorno / Riesgo",
-                format="%.1f",
-                min_value=0.0,
-                max_value=2.0
-            ),
-            "Perfil Riesgo": st.column_config.TextColumn("Perfil Riesgo")
+            "Perdida Prom": st.column_config.TextColumn("Perdida Prom"),
+            "Duración Ganador": st.column_config.NumberColumn("Duración Gan"),
+            "Duración Perdedor": st.column_config.NumberColumn("Duración Per"),
+            "Profit Factor": st.column_config.NumberColumn("Profit Factor"),
+            "Sharpe": st.column_config.NumberColumn("Sharpe"),
+            "Perfil Riesgo": st.column_config.TextColumn("Perfil Riesgo"),
+            "Posiciones Simultaneas": st.column_config.NumberColumn("Pos. Sim."),
+            "Min Inversion (USD)": st.column_config.NumberColumn("Min Inv")
         }
     )
     st.markdown("<hr style='margin-top:30px; margin-bottom:30px; border: 0; border-top: 1px solid #eee;'>", unsafe_allow_html=True)
@@ -338,7 +339,7 @@ if not yearly_df.empty:
 else:
     st.write("No data available.")
 
-# --- Footer & Disclaimer (Basado en image_a0d562.png) ---
+# --- Footer & Disclaimer ---
 st.markdown("<br><br>", unsafe_allow_html=True)
 
 # Contenedor del Aviso de Riesgo
