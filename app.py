@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
@@ -66,7 +67,12 @@ def load_data():
     
 # --- Load Summary Table ---
 @st.cache_data
-def load_summary_table():
+def load_summary_table(_file_mtime):
+    # _file_mtime (última modificación del archivo) se pasa como argumento
+    # únicamente para que Streamlit invalide el caché automáticamente cada vez
+    # que SummaryTable.csv cambie en disco. Sin esto, @st.cache_data seguiría
+    # sirviendo la versión vieja del archivo aunque se reemplace el CSV,
+    # ya que el caché de Streamlit no detecta cambios en archivos por sí solo.
     path = "SummaryTable.csv"
     try:
         summary_df = pd.read_csv(path)
@@ -77,7 +83,12 @@ def load_summary_table():
         return None
 
 historical_df, strategies = load_data()
-summary_df = load_summary_table()
+
+# Se obtiene la fecha de modificación del archivo para invalidar el caché
+# automáticamente cuando el CSV se actualice en disco.
+_summary_path = "SummaryTable.csv"
+_summary_mtime = os.path.getmtime(_summary_path) if os.path.exists(_summary_path) else None
+summary_df = load_summary_table(_summary_mtime)
 
 # --- Top Section: Summary Metrics Table ---
 st.markdown("<h2 style='text-align: center; margin-bottom: 5px;'>Resultados Históricos por Estrategia</h2>", unsafe_allow_html=True)
