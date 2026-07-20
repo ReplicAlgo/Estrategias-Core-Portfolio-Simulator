@@ -84,10 +84,16 @@ st.markdown("<h2 style='text-align: center; margin-bottom: 5px;'>Resultados Hist
 st.markdown("<p style='text-align: center; color: #666; margin-bottom: 20px;'>Utiliza estas métricas de rendimiento histórico (2007 - 2026) para guiar tu asignación en el menú lateral.</p>", unsafe_allow_html=True)
 
 if summary_df is not None:
+    # Altura calculada dinámicamente para mostrar TODAS las filas sin scroll vertical
+    # (encabezado + una fila por estrategia). El scroll horizontal sigue disponible
+    # ya que la tabla ahora es más ancha (se extendió de la columna O a la Q).
+    tabla_altura = (len(summary_df) + 1) * 35 + 3
+
     st.dataframe(
         summary_df,
         hide_index=True,
         use_container_width=True,
+        height=tabla_altura,
         column_config={
             "Estrategia": st.column_config.TextColumn("Estrategia", help="Nombre del sistema cuantitativo"),
             "Fecha": st.column_config.TextColumn("Periodo", help="Rango de fechas evaluado"),
@@ -99,6 +105,8 @@ if summary_df is not None:
             "% Ganadoras": st.column_config.TextColumn("% Ganado"),
             "Gan. Promedio": st.column_config.TextColumn("Gan. Prom"),
             "Perdida Promedio": st.column_config.TextColumn("Perdida Pr"),
+            "Duración G": st.column_config.TextColumn("Duración Ganadora", help="Duración promedio de operaciones ganadoras"),
+            "Duración P": st.column_config.TextColumn("Duración Perdedora", help="Duración promedio de operaciones perdedoras"),
             "Profit Fact": st.column_config.NumberColumn("Profit Fact", format="%.1f"),
             "Sharpe": st.column_config.ProgressColumn(
                 "Sharpe Ratio",
@@ -107,7 +115,9 @@ if summary_df is not None:
                 min_value=0.0,
                 max_value=2.0
             ),
-            "Perfil Riesgo": st.column_config.TextColumn("Perfil Riesgo")
+            "Perfil Riesgo": st.column_config.TextColumn("Perfil Riesgo"),
+            "Posiciones Simultaneas": st.column_config.NumberColumn("Posiciones", help="Número de posiciones simultáneas", format="%d"),
+            "Min Inversión (USD)": st.column_config.NumberColumn("Min Inversión", help="Inversión mínima recomendada (USD)", format="$%d")
         }
     )
     st.markdown("<hr style='margin-top:30px; margin-bottom:30px; border: 0; border-top: 1px solid #eee;'>", unsafe_allow_html=True)
