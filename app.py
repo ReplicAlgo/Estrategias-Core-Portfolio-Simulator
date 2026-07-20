@@ -69,7 +69,9 @@ def load_data():
 def load_summary_table():
     path = "SummaryTable.csv"
     try:
-        summary_df = pd.read_csv(path)
+        # 'on_bad_lines' skips lines that have too many fields
+        # 'engine="python"' is more flexible with inconsistent CSV formatting
+        summary_df = pd.read_csv(path, on_bad_lines='skip', engine='python')
         summary_df = summary_df.loc[:, ~summary_df.columns.str.contains('^Unnamed')]
         # Filtramos filas vacías para evitar que aparezcan en la app
         summary_df = summary_df.dropna(subset=[summary_df.columns[0]])
